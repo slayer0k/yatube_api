@@ -1,5 +1,5 @@
 from rest_framework.exceptions import ValidationError
-from rest_framework import mixins, viewsets, filters, pagination
+from rest_framework import mixins, viewsets, filters, pagination, permissions
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 
@@ -13,7 +13,6 @@ from .permissions import AuthorOrReadOnly
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = (AllowAny,)
 
 
 class FollowViewSet(
@@ -22,6 +21,7 @@ class FollowViewSet(
 ):
     serializer_class = FollowSerializer
     filter_backends = (filters.SearchFilter,)
+    permission_classes = (permissions.IsAuthenticated,)
     search_fields = ('following__username', 'user__username')
 
     def get_queryset(self):
