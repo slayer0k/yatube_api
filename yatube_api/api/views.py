@@ -1,6 +1,5 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework import mixins, viewsets, filters, pagination, permissions
-from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 
 from posts.models import Group, Follow, Post, User
