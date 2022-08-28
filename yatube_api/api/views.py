@@ -1,8 +1,7 @@
-from rest_framework.exceptions import ValidationError
 from rest_framework import mixins, viewsets, filters, pagination, permissions
 from django.shortcuts import get_object_or_404
 
-from posts.models import Group, Follow, Post, User
+from posts.models import Group, Post
 from .serializers import (
     CommentSerializer, GroupSerializer, FollowSerializer, PostSerializer
 )
@@ -21,27 +20,13 @@ class FollowViewSet(
     serializer_class = FollowSerializer
     filter_backends = (filters.SearchFilter,)
     permission_classes = (permissions.IsAuthenticated,)
-    search_fields = ('following__username', 'user__username')
+    search_fields = ('=following__username', '=user__username')
 
     def get_queryset(self):
         return self.request.user.follower.all()
 
     def perform_create(self, serializer):
-        if self.request.data.get('following') is None:
-            raise ValidationError(
-                'Отсутствует необходимое значение [following]'
-            )
-        following = get_object_or_404(
-            User, username=self.request.data.get('following')
-        )
-        if self.request.user == following:
-            raise ValidationError('нельзя подписаться на себя')
-        if Follow.objects.filter(
-            user=self.request.user,
-            following=following
-        ).exists():
-            raise ValidationError('Подписка на этого автора уже есть')
-        serializer.save(user=self.request.user, following=following)
+        serializer.save(user=self.request.user)
 
 
 class PostViewSet(viewsets.ModelViewSet):
