@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Comment, Group, Follow, Post, User
+from .validators import NotSameValuesForFrields
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -40,7 +41,7 @@ class FollowSerializer(serializers.ModelSerializer):
     )
     following = serializers.SlugRelatedField(
         slug_field='username',
-        queryset=User.objects.all()
+        queryset=User.objects.all(),
     )
 
     class Meta:
@@ -50,12 +51,9 @@ class FollowSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Follow.objects.all(),
                 fields=('user', 'following')
+            ),
+            NotSameValuesForFrields(
+                fields=('user', 'following'),
+                message='Нельзя подписаться на самого себя'
             )
         ]
-
-    def validate(self, attrs):
-        if attrs.get('following') == self.context['request'].user:
-            raise serializers.ValidationError(
-                'Вы не можете подписаться на самого себя'
-            )
-        return attrs
