@@ -8,7 +8,7 @@ class NotSameValuesForFrields:
         self.fields = fields
         self.message = message
 
-    def check_fields(self):
+    def check_parameters(self):
         if not isinstance(self.fields, (list, tuple)):
             raise TypeError(
                 'Параметр fields валидатора NoTSameValuesForFields '
@@ -23,9 +23,13 @@ class NotSameValuesForFrields:
             raise KeyError(
                 'В параметрe fields количество ключей не равно 2'
             )
+        if not isinstance(self.message, str):
+            raise TypeError(
+                'Параметр [message] должен быть string'
+            )
 
     def __call__(self, data, serializer):
-        self.check_fields()
+        self.check_parameters()
         message = self.message or (
             f'Значение полей [{", ".join(self.fields)}] не может '
             f'быть одинаковым'
