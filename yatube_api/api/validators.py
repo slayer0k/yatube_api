@@ -8,16 +8,23 @@ class NotSameValuesForFields:
         self.fields = fields
         self.message = message
 
+    def check_fields(self, data):
+        for field in self.fields:
+            if field not in data:
+                raise KeyError(
+                    f'Поле -{field}- отсутствует в сериализаторе'
+                )
+
     def __call__(self, data, serializer):
+        self.check_fields(data.keys())
         message = self.message or (
             f'Значения полей [{", ".join(self.fields)}] не может '
             f'быть одинаковым'
         )
-        values = [
+        values = {
             value for key, value in data.items()
             if key in self.fields
-        ]
-        for index in range(len(values)):
-            if values.pop(0) in values:
-                raise serializers.ValidationError(message)
+        }
+        if len(values) != len(self.fields):
+            raise serializers.ValidationError(message)
         return
