@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
 from posts.models import Comment, Group, Follow, Post, User
-from .validators import NotSameValuesForFrields
+from .validators import NotSameValuesForFields
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -52,7 +52,7 @@ class FollowSerializer(serializers.ModelSerializer):
                 queryset=Follow.objects.all(),
                 fields=('user', 'following')
             ),
-            NotSameValuesForFrields(
+            NotSameValuesForFields(
                 fields=('user', 'following'),
                 message='Нельзя подписаться на самого себя'
             )
