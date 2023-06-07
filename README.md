@@ -6,7 +6,7 @@
 - Django 2.2.19
 - Djangorestframework 3.12.4
 #### Запуск в Dev-режиме
-- клонируйте репозиторий: git clone https://github.com/slayer0k/api_final_yatube.git
+- клонируйте репозиторий: git clone git@github.com:slayer0k/yatube_api.git
 - Установите и активируйте виртуальное окружение
 - Установите зависимости из файла requirements.txt (pip install -r requirements.txt)
 - В папке с файлом manage.py выполните команду: python3 manage.py runserver (для Windows python manage.py runserver)
